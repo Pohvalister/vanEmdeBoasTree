@@ -1,4 +1,5 @@
 #include <iostream>
+#include <set>
 #include "veb.h"
 #include "veb.cpp"
 #include "algorithm"
@@ -51,5 +52,41 @@ int main() {
     std::cout<<tree2.prev(NO)<<'\n';
     std::cout<<tree3.next(0)<<'\n';
     std::cout<<tree3.prev(NO)<<'\n';
+
+    std::set<unsigned long long int> set;
+    std::random_shuffle(values3.begin(),values3.end());
+
+    VEBTree<val> tree4;
+    VEBTree<val> tree5;
+
+    for (int i=0;i<100000;i++){
+        set.insert(values3[i]);
+        tree4.add(values3[i]);
+        tree5.add(values3[i]);
+    }
+    int tmp=values3[0];
+    std::random_shuffle(values3.begin(),values3.end());
+    bool flag =false;
+    for (auto iter=values3.begin();iter!=values3.end();++iter){
+        if (*iter==tmp)
+            flag=true;
+        if (flag) {
+            if (tree5.prev(tree4.next(*iter)) != *iter) {
+                std::cout << "NOOO\n"<<tree5.prev(tree4.next(*iter))<<' '<<*iter<<'\n';
+            }
+        }else{
+            if (*iter!=*(++iter))
+                tree5.remove(*iter);
+        }
+
+    }
+    std::sort(values3.begin(),values3.end());
+
+    for (int i=1;i<100000;i++){
+        if (values3[i-1]!=values3[i]&&tree4.next(values3[i-1])!=values3[i])
+            std::cout<<"NOnext "<<tree4.next(values3[i-1])<<" "<<values3[i]<<'\n';
+        if (values3[i-1]!=values3[i]&&tree4.prev(values3[i])!=values3[i-1])
+            std::cout<<"NOprev "<<tree4.prev(values3[i])<<" "<<values3[i-1]<<'\n';;
+    }
 
 }
